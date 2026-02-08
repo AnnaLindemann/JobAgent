@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Job Agent (MVP)
 
-## Getting Started
+Job Agent is a Next.js fullstack app to track job applications and (later) assist with email ingestion and AI-driven suggestions (RAG + agent tools).
 
-First, run the development server:
+## Tech Stack
+- Next.js (App Router) + TypeScript
+- pnpm
+- Zod (runtime validation)
+- LLM layer: Mock-first (real provider later)
 
+## Requirements
+- Node.js (LTS recommended)
+- pnpm
+
+## Quick Start
+
+### 1 Install
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
+2 Environment
+Create .env.local in the project root (do not commit it).
+See .env.example for the required variables.
+
+3 Run
 pnpm dev
-# or
-bun dev
-```
+Open:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+4 Health check
+curl -s http://localhost:3000/api/health | cat
+5 Mock LLM test
+curl -s -X POST http://localhost:3000/api/llm/test \
+  -H "Content-Type: application/json" \
+  -d '{"prompt":"Hello from mock"}' | cat
+##Scripts
+pnpm dev — start dev server
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+pnpm build — production build
 
-## Learn More
+pnpm start — run production server
 
-To learn more about Next.js, take a look at the following resources:
+pnpm lint — lint
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+pnpm typecheck — TypeScript type check
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Environment Variables
+Defined in .env.example.
 
-## Deploy on Vercel
+OPENAI_API_KEY — required (used only when real LLM provider is enabled)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Project Structure (Boundaries)
+src/app/ — UI and route handlers (thin HTTP layer)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+src/server/ — use-cases / business logic (provider-agnostic)
+
+src/agents/ — LLM/RAG tools and integrations (mock/real providers)
+
+src/shared/ — shared types and Zod schemas
+
+##Development Rules
+Code comments are always in English.
+
+Strict TypeScript: no any (use unknown + Zod validation).
+
+Small steps with verification after each change.
+
+Commit + push after each completed step.
+
+Mock-first for LLM until billing is enabled.

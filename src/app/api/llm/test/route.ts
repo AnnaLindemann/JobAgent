@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
-import { MockLLMClient } from "@/agents/llm/mock";
+import { getLLMClient } from "@/agents/llm/client";
 import { llmInputSchema } from "@/agents/llm/types";
 
 export const runtime = "nodejs";
@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     const bodyUnknown: unknown = await req.json();
     const input = requestSchema.parse(bodyUnknown);
 
-    const llm = new MockLLMClient();
+    const llm = getLLMClient();
     const output = await llm.generate(input);
 
     const payload = responseSchema.parse({ text: output.text });
