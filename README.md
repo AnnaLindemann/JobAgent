@@ -68,3 +68,7 @@ Small steps with verification after each change.
 Commit + push after each completed step.
 
 Mock-first for LLM until billing is enabled.
+
+##Project Structure (Boundaries)
+
+- `src/server/` — use-cases / business logic (provider-agnostic; callable from API/cron/n8n)
