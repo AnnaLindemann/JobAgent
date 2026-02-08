@@ -72,3 +72,11 @@ Mock-first for LLM until billing is enabled.
 ##Project Structure (Boundaries)
 
 - `src/server/` — use-cases / business logic (provider-agnostic; callable from API/cron/n8n)
+
+##Running tests
+
+pnpm test — run tests in watch mode
+
+pnpm test:run — run all tests once (CI-friendly)
+
+Unit tests are colocated next to the files they test to keep changes and validations close together.
