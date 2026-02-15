@@ -24,6 +24,7 @@ export class InMemoryJobRepository implements JobRepository {
       status: data.status ?? "draft",
       createdAt: now,
       updatedAt: now,
+      
     };
 
     this.store.set(id, job);
@@ -52,5 +53,13 @@ export class InMemoryJobRepository implements JobRepository {
 
     this.store.set(id, updated);
     return updated;
-  }
+  };
+  clear(): void {
+  this.store.clear();
+}
+async delete(id: string): Promise<boolean> {
+  return this.store.delete(id);
+}
+
+
 }

@@ -12,4 +12,9 @@ export interface JobRepository {
   getById(id: string): Promise<Job | null>;
 
   update(id: string, patch: JobUpdateInput): Promise<Job | null>;
+  // Test-only helper (in-memory)
+  clear(): void;
+
+  delete(id: string): Promise<boolean>;
+
 }
