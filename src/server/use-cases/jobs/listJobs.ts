@@ -6,6 +6,6 @@ import { JobRepository } from "../../repositories/jobRepository";
  * Sorting/filtering can be added later without touching route handlers.
  */
 
-export async function listJob(repo: JobRepository): Promise<Job[]>{
+export async function listJobs(repo: JobRepository): Promise<Job[]>{
   return repo.list()
 }
