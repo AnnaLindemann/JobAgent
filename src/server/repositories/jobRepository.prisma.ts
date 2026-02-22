@@ -75,21 +75,11 @@ export class PrismaJobRepository implements JobRepository {
     return mapDbJobToDomain(updated);
   }
 
-  clear(): void {
-    // Intentionally sync per interface. Only safe in tests/dev.
-    if (process.env.NODE_ENV === "production") {
-      throw new Error("PrismaJobRepository.clear() is not allowed in production");
-    }
-    // Fire-and-forget is dangerous; but interface is sync. We'll keep it safe:
-    // call sites in tests should await an explicit helper instead.
-    void prisma.job.deleteMany();
-  }
+async delete(id: string): Promise<boolean> {
+  const result = await prisma.job.deleteMany({
+    where: { id },
+  });
 
-  async delete(id: string): Promise<boolean> {
-    const existing = await prisma.job.findUnique({ where: { id } });
-    if (!existing) return false;
-
-    await prisma.job.delete({ where: { id } });
-    return true;
-  }
+  return result.count > 0;
+}
 }

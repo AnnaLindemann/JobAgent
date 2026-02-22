@@ -1,12 +1,15 @@
-import { describe, it, expect } from "vitest";
-import { InMemoryJobRepository } from "@/server/repositories/jobRepository.memory";
+import { describe, it, expect, beforeEach } from "vitest";
 import { updateJob } from "./updateJob";
-
-
+import { PrismaJobRepository } from "@/server/repositories/jobRepository.prisma";
+import { resetDb } from "@/server/test-utils/resetDb";
 
 describe("updateJob", () => {
+  beforeEach(async () => {
+    await resetDb();
+  });
+
   it("throws INVALID_STATUS_TRANSITION when transition is not allowed", async () => {
-    const repo = new InMemoryJobRepository();
+    const repo = new PrismaJobRepository();
 
     const created = await repo.create({ title: "Test Job", status: "draft" });
 
@@ -27,18 +30,18 @@ describe("updateJob", () => {
     expect(after?.status).toBe("applied");
   });
 
-  it("updates status when transition is allowed", async() => {
-    const repo = new InMemoryJobRepository();
-     const job = await repo.create({ title: "Test Job", status: "draft" });
-     expect(job.status).toBe("draft");
+  it("updates status when transition is allowed", async () => {
+    const repo = new PrismaJobRepository();
 
-      const updated = await updateJob(repo, job.id, { status: "applied" });
+    const job = await repo.create({ title: "Test Job", status: "draft" });
+    expect(job.status).toBe("draft");
+
+    const updated = await updateJob(repo, job.id, { status: "applied" });
+
+    expect(updated).not.toBeNull();
     expect(updated?.status).toBe("applied");
-     
-     expect(updated).not.toBeNull();
-  expect(updated?.status).toBe("applied");
 
-  const fromRepo = await repo.getById(job.id);
-  expect(fromRepo?.status).toBe("applied");
- 
-  });});
+    const fromRepo = await repo.getById(job.id);
+    expect(fromRepo?.status).toBe("applied");
+  });
+});

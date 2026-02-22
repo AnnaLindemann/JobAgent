@@ -5,7 +5,7 @@ import type { ApiError } from "@/shared/api";
 import { mapErrorToResponse } from "@/shared/mapErrorToResponse";
 import { getJobById } from "@/server/use-cases/jobs/getJobById";
 import { deleteJob } from "@/server/use-cases/jobs/deleteJob";
-import { getRepoSource } from "@/shared/source";
+
 
 
 function errorResponse(status: number, error: ApiError): Response {
@@ -48,10 +48,9 @@ export async function PATCH(
         details: {},
       });
     }
-     const source = getRepoSource();
-
+   
     return NextResponse.json(
-      { job: updated, meta: { source } },
+      { job: updated},
       { status: 200 }
     );
   } catch (err: unknown) {

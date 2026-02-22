@@ -1,23 +1,14 @@
-import { InMemoryJobRepository } from "./jobRepository.memory";
 import { PrismaJobRepository } from "./jobRepository.prisma";
 import type { JobRepository } from "./jobRepository";
 
 // Keep a single repository instance across route handlers (especially in dev/HMR).
-declare global {
-  // eslint-disable-next-line no-var
-  var __jobRepo: JobRepository | undefined;
-}
-
-function createRepository(): JobRepository {
-  if (process.env.JOB_REPO === "prisma") {
-    return new PrismaJobRepository();
-  }
-  return new InMemoryJobRepository();
-}
+const globalForRepo = globalThis as unknown as {
+  __jobRepo?: JobRepository;
+};
 
 export function getJobRepository(): JobRepository {
-  if (!globalThis.__jobRepo) {
-    globalThis.__jobRepo = createRepository();
+  if (!globalForRepo.__jobRepo) {
+    globalForRepo.__jobRepo = new PrismaJobRepository();
   }
-  return globalThis.__jobRepo;
+  return globalForRepo.__jobRepo;
 }

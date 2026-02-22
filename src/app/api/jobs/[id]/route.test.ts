@@ -1,20 +1,21 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { GET } from "./route";
 import { getJobRepository } from "@/server/repositories/jobRepoInstance";
-
+import { resetDb } from "@/server/test-utils/resetDb";
+import { resetRepoSingleton } from "@/server/test-utils/resetRepoSingleton";
 
 describe("GET /api/jobs/:id", () => {
-  beforeEach(() => {
-    // Reset in-memory repo between tests
-    const repo = getJobRepository();
-    repo.clear?.(); // если есть clear()
-  });
+ beforeEach(async () => {
+  await resetDb();
+  resetRepoSingleton()
+});
 
   it("returns 200 and job when found", async () => {
     const repo = getJobRepository();
 
     const created = await repo.create({
       title: "Test GET",
+      status: "draft" 
     });
 
     const response = await GET(
