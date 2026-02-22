@@ -5,6 +5,7 @@ import type { ApiError } from "@/shared/api";
 import { mapErrorToResponse } from "@/shared/mapErrorToResponse";
 import { getJobById } from "@/server/use-cases/jobs/getJobById";
 import { deleteJob } from "@/server/use-cases/jobs/deleteJob";
+import { getRepoSource } from "@/shared/source";
 
 
 function errorResponse(status: number, error: ApiError): Response {
@@ -16,11 +17,12 @@ export async function GET(
   context: { params: Promise<{ id: string }> }
 ): Promise<Response> {
   try {
+    
     const { id } = await context.params;
 
     const repo = getJobRepository();
     const result = await getJobById(repo, { id });
-
+    
     return NextResponse.json(result, { status: 200 });
   } catch (err: unknown) {
     return mapErrorToResponse(err);
@@ -46,8 +48,10 @@ export async function PATCH(
         details: {},
       });
     }
+     const source = getRepoSource();
+
     return NextResponse.json(
-      { job: updated, meta: { source: "in-memory" } },
+      { job: updated, meta: { source } },
       { status: 200 }
     );
   } catch (err: unknown) {

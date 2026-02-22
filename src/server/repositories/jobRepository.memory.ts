@@ -1,4 +1,4 @@
-import { Job, JobCreateInput, JobUpdateInput } from "@/shared/job";
+import { Job, JobCreateData, JobUpdateInput } from "@/shared/job";
 import { JobRepository } from "./jobRepository";
 
 
@@ -10,7 +10,7 @@ import { JobRepository } from "./jobRepository";
 export class InMemoryJobRepository implements JobRepository {
   private readonly store = new Map<string, Job>();
 
-  async create(data: JobCreateInput): Promise<Job> {
+  async create(data: JobCreateData): Promise<Job> {
     const now = new Date().toISOString();
     const id = crypto.randomUUID();
 

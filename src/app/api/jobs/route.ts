@@ -3,12 +3,14 @@ import { getJobRepository } from "@/server/repositories/jobRepoInstance";
 import { listJobs } from "@/server/use-cases/jobs/listJobs";
 import { createJob } from "@/server/use-cases/jobs/createJob";
 import { ZodError } from "zod";
+import { getRepoSource } from "@/shared/source";
 
 
 export async function GET(): Promise<Response> {
   const repo = getJobRepository();
   const jobs = await listJobs(repo);
-  return NextResponse.json({ jobs });
+  const source = getRepoSource();
+  return NextResponse.json({ jobs, meta: { source }});
 }
 
 
@@ -17,7 +19,8 @@ try{
   const repo = getJobRepository();
   const input:unknown = await request.json();
   const createdJob = await createJob(repo,input);
-  return NextResponse.json({job: createdJob,meta: { source: "in-memory" }}, {status: 201});
+   const source = getRepoSource();
+  return NextResponse.json({job: createdJob,meta: { source }}, {status: 201});
 } catch(err: unknown){
   if(err instanceof ZodError){
     return NextResponse.json(
@@ -31,6 +34,7 @@ try{
   {status:400}
   );
   }
+
   return NextResponse.json(
     {
       error:{

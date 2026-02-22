@@ -40,6 +40,9 @@ export const JobCreateInputSchema = z.object({
 });
 
 export type JobCreateInput = z.infer<typeof JobCreateInputSchema>;
+export type JobCreateData = Omit<JobCreateInput, "status"> & {
+  status: z.infer<typeof JobStatusSchema>;
+};
 
 // Input when updating a job (PATCH-like).
 // Explicitly restrict fields that are allowed to change.

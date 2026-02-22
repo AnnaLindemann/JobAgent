@@ -8,9 +8,7 @@ describe("updateJob", () => {
   it("throws INVALID_STATUS_TRANSITION when transition is not allowed", async () => {
     const repo = new InMemoryJobRepository();
 
-    const created = await repo.create({
-      title: "Test Job",
-    });
+    const created = await repo.create({ title: "Test Job", status: "draft" });
 
     // Sanity: starts as draft
     expect(created.status).toBe("draft");
@@ -31,9 +29,7 @@ describe("updateJob", () => {
 
   it("updates status when transition is allowed", async() => {
     const repo = new InMemoryJobRepository();
-     const job = await repo.create({
-      title: "Test Job"
-     });
+     const job = await repo.create({ title: "Test Job", status: "draft" });
      expect(job.status).toBe("draft");
 
       const updated = await updateJob(repo, job.id, { status: "applied" });
