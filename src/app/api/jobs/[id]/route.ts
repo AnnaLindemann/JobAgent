@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { getJobRepository } from "@/server/repositories/jobRepoInstance";
 import { updateJob } from "@/server/use-cases/jobs/updateJob";
 import type { ApiError } from "@/shared/api";
